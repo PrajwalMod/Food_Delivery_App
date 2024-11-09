@@ -1,6 +1,5 @@
 from flask import request, jsonify
 from app.models.restaurant_model import Restaurant, restaurants
-from app.utils.exceptions import ValidationError, ResourceNotFoundError
 from app.models.order_model import Order, orders
 
 def add_restaurant():
