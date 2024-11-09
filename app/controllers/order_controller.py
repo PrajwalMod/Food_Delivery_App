@@ -1,6 +1,8 @@
 from flask import request, jsonify
-from app.models.order_model import Order, orders
+from app.services.order_service import OrderService
+from app.utils.exceptions import ValidationError, ResourceNotFoundError
 
+order_service = OrderService()  # Initialize service
 def create_order():
     """
     Create a new order.
@@ -8,10 +10,17 @@ def create_order():
     Returns:
         Response: JSON response with a success message.
     """
-    data = request.get_json()
-    order = Order(**data)
-    orders.append(order)
-    return jsonify({"message": "Order created successfully"}), 201
+    try:
+        data = request.get_json()
+        order = order_service.create_order(
+            user_id=data['user_id'],
+            restaurant_id=data['restaurant_id'],
+            items=data['items'],
+            total_price=data['total_price']
+        )
+        return jsonify({"message": "Order created successfully"}), 201
+    except (ValidationError, ResourceNotFoundError) as e:
+        return jsonify({"message": str(e)}), 400
 
 def get_order(order_id):
     """
@@ -23,10 +32,11 @@ def get_order(order_id):
     Returns:
         Response: JSON response with order details or an error message.
     """
-    order = next((o for o in orders if o.user_id == order_id), None)
-    if order:
+    try:
+        order = order_service.get_order(order_id)
         return jsonify(order.__dict__), 200
-    return jsonify({"message": "Order not found"}), 404
+    except ResourceNotFoundError as e:
+        return jsonify({"message": str(e)}), 404
 
 def get_user_order_status(user_id):
     """
@@ -38,10 +48,13 @@ def get_user_order_status(user_id):
     Returns:
         Response: JSON response with order statuses or an error message.
     """
-    user_orders = [order for order in orders if order.user_id == user_id]
-    if user_orders:
-        return jsonify([order.__dict__ for order in user_orders]), 200
-    return jsonify({"message": "No orders found for this user"}), 404
+    try:
+        user_orders = order_service.get_user_orders(user_id)
+        if user_orders:
+            return jsonify([order.__dict__ for order in user_orders]), 200
+        return jsonify({"message": "No orders found for this user"}), 404
+    except ResourceNotFoundError as e:
+        return jsonify({"message": str(e)}), 404
 
 def update_order_status(order_id):
     """
@@ -53,10 +66,11 @@ def update_order_status(order_id):
     Returns:
         Response: JSON response with a success message or an error message.
     """
-    data = request.get_json()
-    status = data.get('status')
-    order = next((o for o in orders if o.user_id == order_id), None)
-    if order and status in ['Accepted', 'Rejected', 'Picked Up', 'Delivered']:
-        order.update_status(status)
+    try:
+        data = request.get_json()
+        status = data.get('status')
+        role = request.headers.get('role', 'user')  # Should come from authenticated user
+        order = order_service.update_order_status(order_id, status, role)
         return jsonify({"message": f"Order {status.lower()} successfully"}), 200
-    return jsonify({"message": "Order not found or invalid status"}), 404
+    except (ValidationError, ResourceNotFoundError) as e:
+        return jsonify({"message": str(e)}), 400

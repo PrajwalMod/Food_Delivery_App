@@ -1,3 +1,8 @@
 Flask==2.0.3
 Werkzeug==2.0.3
 requests_mock==1.9.3
+flasgger==0.9.5
+python-dotenv==0.19.0
+pytest==7.0.1
+PyJWT==2.3.0
+bcrypt==3.2.0
