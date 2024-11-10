@@ -1,7 +1,9 @@
 # Food Delivery App
+
 This is a microservice-based food delivery app built with Flask.
 
 ## Setup
+
 1. Clone the repository.
 2. Create a virtual environment and activate it.
 3. Install the dependencies:
@@ -31,6 +33,21 @@ This is a microservice-based food delivery app built with Flask.
     ```json
     {
       "message": "User registered successfully"
+    }
+    ```
+
+- **POST /api/users/login**: User login.
+  - **Request Body:**
+    ```json
+    {
+      "username": "testuser",
+      "password": "password"
+    }
+    ```
+  - **Response:**
+    ```json
+    {
+      "token": "jwt_token"
     }
     ```
 
@@ -88,7 +105,8 @@ This is a microservice-based food delivery app built with Flask.
       "user_id": "testuser",
       "restaurant_id": "testrestaurant",
       "items": ["item1", "item2"],
-      "total_price": 100.0
+      "total_price": 100.0,
+      "status": "Pending"
     }
     ```
 
@@ -116,7 +134,7 @@ This is a microservice-based food delivery app built with Flask.
   - **Response:**
     ```json
     {
-      "message": "Order accepted successfully"
+      "message": "Order status updated successfully"
     }
     ```
 
@@ -262,6 +280,7 @@ This is a microservice-based food delivery app built with Flask.
 - **Delivery Agent**: Access to order status updates for delivery.
 
 ## Running Tests
+
 To ensure everything is working correctly, run your automated tests using `unittest` or `pytest`:
 
 #### Using `unittest`
