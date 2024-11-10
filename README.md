@@ -16,6 +16,37 @@ This is a microservice-based food delivery app built with Flask.
     python app.py
     ```
 
+## Architecture
+
+The application is structured as a microservices-based architecture with the following components:
+
+```plaintext
++---------------------+       +--------------------------------------+          +---------------------------+
+|     User Service    |       |    Order Service                     |          |  Restaurant Service       |
+|---------------------|       |--------------------------------------|          |---------------------------|
+| - Register User     |       | - Create Order                       |          | - Add Restaurant          |
+|   POST /register    |       |   POST /orders/                      |          |   POST /restaurants/      |
+| - Login User        |       | - Update Order                       |          | - Update Restaurant       |
+|   POST /login       |       |   PUT /orders/{id}                   |          |   PUT /restaurants/{id}   |
+| - Get User Profile  |       | - Get Order                          |          | - Get Restaurant          |
+|   GET /{user_id}    |       |   GET /orders/{id}                   |          |   GET /restaurants/{id}   |
+| - Update User       |       | - Order Status                       |          | - Search Restaurants      |
+|   PUT /{user_id}    |       |   GET /orders/user/{user_id}/status  |          |   GET /restaurants/search |
++---------------------+       | - Pickup Order                       |          +---------------------------+
+         |                    |   PUT /orders/{id}/pickup            |
+         |                    | - Deliver Order                      |
+         |                    |   PUT /orders/{id}/deliver           |
+         |                    +--------------------------------------+
+         |                           |
+         v                           v
++---------------------+       +---------------------+
+| Authentication &    |       |     Database        |
+| Authorization       |       |---------------------|
+|---------------------|       | - User Data         |
+| - JWT Tokens        |       | - Order Data        |
+| - Role Middleware   |       | - Restaurant Data   |
++---------------------+       +---------------------+
+
 ## Endpoints
 
 ### User Endpoints
