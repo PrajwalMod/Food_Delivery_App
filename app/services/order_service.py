@@ -24,4 +24,4 @@ def get_order_by_id(order_id):
     Returns:
         Order: The order object if found, else None.
     """
-    return next((o for o in orders if o.user_id == order_id), None)
+    return next((o for o in orders if o.id == order_id), None)

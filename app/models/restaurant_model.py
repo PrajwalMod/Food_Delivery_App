@@ -24,7 +24,7 @@ class Restaurant:
         self.name = name
         self.address = address
         self.cuisine = cuisine
-        self.menu = menu  # List of dictionaries with item names and prices
+        self.menu = menu
         self.work_hours = work_hours
 
     def update_details(self, address=None, cuisine=None, menu=None, work_hours=None):
@@ -33,9 +33,9 @@ class Restaurant:
 
         Args:
             address (str): The new address of the restaurant.
-            cuisine (str): The new cuisine type of the restaurant.
+            cuisine (str): The new cuisine of the restaurant.
             menu (list): The new menu of the restaurant.
-            work_hours (str): The new working hours of the restaurant.
+            work_hours (str): The new work hours of the restaurant.
         """
         if address:
             self.address = address

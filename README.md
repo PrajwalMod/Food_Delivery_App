@@ -13,7 +13,7 @@ This is a microservice-based food delivery app built with Flask.
 4. Create a `.env` file and add your environment variables.
 5. Run the application:
     ```sh
-    python app.py
+    python -m app.app
     ```
 
 ## Architecture
@@ -46,6 +46,16 @@ The application is structured as a microservices-based architecture with the fol
 | - JWT Tokens        |       | - Order Data        |
 | - Role Middleware   |       | - Restaurant Data   |
 +---------------------+       +---------------------+
+
+## Roles and Permissions
+  Roles
+    1. User: Can register, login, view and update their profile, place orders, and view order statuses.
+    2. Restaurant Owner: Can add, update, and view restaurant details, and update order statuses to "Accepted" or "Rejected".
+    3. Delivery Agent: Can update order statuses to "Picked Up" and "Delivered".
+  Permissions
+    1. User: Access to user-related endpoints.
+    2. Restaurant Owner: Access to restaurant-related endpoints and order status updates.
+    3. Delivery Agent: Access to order status updates for delivery.
 
 ## Endpoints
 
@@ -316,4 +326,4 @@ To ensure everything is working correctly, run your automated tests using `unitt
 
 #### Using `unittest`
 ```sh
-python -m unittest discover -s tests
+python -m unittest <test>

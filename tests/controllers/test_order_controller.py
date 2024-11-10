@@ -1,6 +1,7 @@
 import unittest
 from app import create_app
 from flask import json
+from app.utils.jwt_utils import generate_jwt
 
 class OrderControllerTestCase(unittest.TestCase):
     def setUp(self):
@@ -16,7 +17,8 @@ class OrderControllerTestCase(unittest.TestCase):
         self.client.post('/api/users/register', data=json.dumps({
             "username": "testuser",
             "email": "testuser@example.com",
-            "password": "password"
+            "password": "password",
+            "role": "user"
         }), content_type='application/json')
         response = self.client.post('/api/orders/', data=json.dumps({
             "user_id": "testuser",
@@ -31,15 +33,17 @@ class OrderControllerTestCase(unittest.TestCase):
         self.client.post('/api/users/register', data=json.dumps({
             "username": "testuser",
             "email": "testuser@example.com",
-            "password": "password"
+            "password": "password",
+            "role": "user"
         }), content_type='application/json')
-        self.client.post('/api/orders/', data=json.dumps({
+        create_response = self.client.post('/api/orders/', data=json.dumps({
             "user_id": "testuser",
             "restaurant_id": "testrestaurant",
             "items": ["item1", "item2"],
             "total_price": 100.0
         }), content_type='application/json')
-        response = self.client.get('/api/orders/testuser')
+        order_id = json.loads(create_response.data)['order_id']
+        response = self.client.get(f'/api/orders/{order_id}')
         self.assertEqual(response.status_code, 200)
         self.assertIn('testuser', str(response.data))
 
@@ -47,7 +51,29 @@ class OrderControllerTestCase(unittest.TestCase):
         self.client.post('/api/users/register', data=json.dumps({
             "username": "testuser",
             "email": "testuser@example.com",
-            "password": "password"
+            "password": "password",
+            "role": "restaurant owner"
+        }), content_type='application/json')
+        create_response = self.client.post('/api/orders/', data=json.dumps({
+            "user_id": "testuser",
+            "restaurant_id": "testrestaurant",
+            "items": ["item1", "item2"],
+            "total_price": 100.0
+        }), content_type='application/json')
+        order_id = json.loads(create_response.data)['order_id']
+        token = generate_jwt("testuser", "restaurant owner")
+        response = self.client.put(f'/api/orders/{order_id}/status', data=json.dumps({
+            "status": "Accepted"
+        }), content_type='application/json', headers={"Authorization": f"Bearer {token}"})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Order accepted successfully', str(response.data))
+
+    def test_get_user_order_status(self):
+        self.client.post('/api/users/register', data=json.dumps({
+            "username": "testuser",
+            "email": "testuser@example.com",
+            "password": "password",
+            "role": "user"
         }), content_type='application/json')
         self.client.post('/api/orders/', data=json.dumps({
             "user_id": "testuser",
@@ -55,11 +81,9 @@ class OrderControllerTestCase(unittest.TestCase):
             "items": ["item1", "item2"],
             "total_price": 100.0
         }), content_type='application/json')
-        response = self.client.put('/api/orders/testuser/status', data=json.dumps({
-            "status": "Accepted"
-        }), content_type='application/json')
+        response = self.client.get('/api/orders/user/testuser/status')
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Order status updated successfully', str(response.data))
+        self.assertIn('Pending', str(response.data))
 
 if __name__ == '__main__':
     unittest.main()

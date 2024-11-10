@@ -1,15 +1,13 @@
 from flask import request, jsonify
 from app.models.user_model import User, users
 
-def register_user():
+def register_user(username, email, password, role):
     """
     Register a new user.
     Returns:
         Response: JSON response with a success message.
     """
-    data = request.get_json()
-    role = data.get('role', 'user')  # Default role is 'user'
-    user = User(username=data['username'], email=data['email'], password=data['password'], role=role)
+    user = User(username=username, email=email, password=password, role=role)
     users.append(user)
     return jsonify({"message": "User registered successfully"}), 201
 

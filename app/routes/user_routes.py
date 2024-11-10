@@ -34,7 +34,12 @@ def register_user_route():
       201:
         description: User registered successfully
     """
-    return register_user()
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role', 'user')
+    return register_user(username, email, password, role)
 
 @user_bp.route('/login', methods=['POST'])
 def login():

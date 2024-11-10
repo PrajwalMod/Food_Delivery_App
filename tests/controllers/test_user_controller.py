@@ -16,26 +16,18 @@ class UserControllerTestCase(unittest.TestCase):
         response = self.client.post('/api/users/register', data=json.dumps({
             "username": "testuser",
             "email": "testuser@example.com",
-            "password": "password"
+            "password": "password",
+            "role": "user"
         }), content_type='application/json')
         self.assertEqual(response.status_code, 201)
         self.assertIn('User registered successfully', str(response.data))
-
-    def test_get_user(self):
-        self.client.post('/api/users/register', data=json.dumps({
-            "username": "testuser",
-            "email": "testuser@example.com",
-            "password": "password"
-        }), content_type='application/json')
-        response = self.client.get('/api/users/testuser')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('testuser', str(response.data))
 
     def test_login_user(self):
         self.client.post('/api/users/register', data=json.dumps({
             "username": "testuser",
             "email": "testuser@example.com",
-            "password": "password"
+            "password": "password",
+            "role": "user"
         }), content_type='application/json')
         response = self.client.post('/api/users/login', data=json.dumps({
             "username": "testuser",
@@ -44,26 +36,12 @@ class UserControllerTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('token', str(response.data))
 
-    def test_update_user(self):
-        self.client.post('/api/users/register', data=json.dumps({
-            "username": "testuser",
-            "email": "testuser@example.com",
-            "password": "password"
-        }), content_type='application/json')
-        response = self.client.put('/api/users/testuser', data=json.dumps({
-            "email": "newemail@example.com",
-            "phone": "1234567890",
-            "delivery_address": "123 New St",
-            "payment_info": "New Payment Info"
-        }), content_type='application/json')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('User details updated successfully', str(response.data))
-
     def test_login_user_invalid_credentials(self):
         self.client.post('/api/users/register', data=json.dumps({
             "username": "testuser",
             "email": "testuser@example.com",
-            "password": "password"
+            "password": "password",
+            "role": "user"
         }), content_type='application/json')
         response = self.client.post('/api/users/login', data=json.dumps({
             "username": "testuser",

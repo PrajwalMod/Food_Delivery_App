@@ -1,6 +1,7 @@
 import unittest
 from app import create_app
 from flask import json
+from app.utils.jwt_utils import generate_jwt  # Ensure you have a utility to generate JWT tokens
 
 class RestaurantControllerTestCase(unittest.TestCase):
     def setUp(self):
@@ -13,49 +14,81 @@ class RestaurantControllerTestCase(unittest.TestCase):
         self.app_context.pop()
 
     def test_add_restaurant(self):
+        self.client.post('/api/users/register', data=json.dumps({
+            "username": "owner",
+            "email": "owner@example.com",
+            "password": "password",
+            "role": "restaurant owner"
+        }), content_type='application/json')
+        token = generate_jwt("owner", "restaurant owner")
         response = self.client.post('/api/restaurants/', data=json.dumps({
             "name": "Test Restaurant",
             "address": "123 Test St",
             "cuisine": "Test Cuisine",
-            "menu": ["item1", "item2"]
-        }), content_type='application/json')
+            "menu": [{"name": "item1", "price": 10.0}, {"name": "item2", "price": 15.0}],
+            "work_hours": "9 AM - 9 PM"
+        }), content_type='application/json', headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 201)
         self.assertIn('Restaurant added successfully', str(response.data))
 
     def test_get_restaurant(self):
+        self.client.post('/api/users/register', data=json.dumps({
+            "username": "owner",
+            "email": "owner@example.com",
+            "password": "password",
+            "role": "restaurant owner"
+        }), content_type='application/json')
+        token = generate_jwt("owner", "restaurant owner")
         self.client.post('/api/restaurants/', data=json.dumps({
             "name": "Test Restaurant",
             "address": "123 Test St",
             "cuisine": "Test Cuisine",
-            "menu": ["item1", "item2"]
-        }), content_type='application/json')
+            "menu": [{"name": "item1", "price": 10.0}, {"name": "item2", "price": 15.0}],
+            "work_hours": "9 AM - 9 PM"
+        }), content_type='application/json', headers={"Authorization": f"Bearer {token}"})
         response = self.client.get('/api/restaurants/Test Restaurant')
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Restaurant', str(response.data))
 
     def test_update_restaurant(self):
+        self.client.post('/api/users/register', data=json.dumps({
+            "username": "owner",
+            "email": "owner@example.com",
+            "password": "password",
+            "role": "restaurant owner"
+        }), content_type='application/json')
+        token = generate_jwt("owner", "restaurant owner")
         self.client.post('/api/restaurants/', data=json.dumps({
             "name": "Test Restaurant",
             "address": "123 Test St",
             "cuisine": "Test Cuisine",
-            "menu": ["item1", "item2"]
-        }), content_type='application/json')
+            "menu": [{"name": "item1", "price": 10.0}, {"name": "item2", "price": 15.0}],
+            "work_hours": "9 AM - 9 PM"
+        }), content_type='application/json', headers={"Authorization": f"Bearer {token}"})
         response = self.client.put('/api/restaurants/Test Restaurant', data=json.dumps({
             "address": "123 New St",
             "cuisine": "New Cuisine",
-            "menu": ["item1", "item2", "item3"],
+            "menu": [{"name": "item1", "price": 10.0}, {"name": "item2", "price": 15.0}, {"name": "item3", "price": 20.0}],
             "work_hours": "10 AM - 10 PM"
-        }), content_type='application/json')
+        }), content_type='application/json', headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(response.status_code, 200)
         self.assertIn('Restaurant details updated successfully', str(response.data))
 
     def test_search_restaurants(self):
+        self.client.post('/api/users/register', data=json.dumps({
+            "username": "owner",
+            "email": "owner@example.com",
+            "password": "password",
+            "role": "restaurant owner"
+        }), content_type='application/json')
+        token = generate_jwt("owner", "restaurant owner")
         self.client.post('/api/restaurants/', data=json.dumps({
             "name": "Test Restaurant",
             "address": "123 Test St",
             "cuisine": "Test Cuisine",
-            "menu": ["item1", "item2"]
-        }), content_type='application/json')
+            "menu": [{"name": "item1", "price": 10.0}, {"name": "item2", "price": 15.0}],
+            "work_hours": "9 AM - 9 PM"
+        }), content_type='application/json', headers={"Authorization": f"Bearer {token}"})
         response = self.client.get('/api/restaurants/search?cuisine=Test Cuisine')
         self.assertEqual(response.status_code, 200)
         self.assertIn('Test Restaurant', str(response.data))

@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request, jsonify
 from app.controllers.order_controller import create_order, get_order, update_order_status, get_user_order_status
 from app.middlewares.role_middleware import role_required
 
@@ -99,70 +99,10 @@ def update_order_status_route(order_id):
               enum:
                 - Accepted
                 - Rejected
-                - Picked Up
-                - Delivered
     responses:
       200:
         description: Order status updated successfully
     """
-    return update_order_status(order_id)
-
-@order_bp.route('/<order_id>/pickup', methods=['PUT'])
-@role_required('delivery agent')
-def pickup_order_route(order_id):
-    """
-    Update order status to picked up
-    ---
-    tags:
-      - Orders
-    parameters:
-      - in: path
-        name: order_id
-        type: string
-        required: true
-      - in: body
-        name: body
-        schema:
-          type: object
-          required:
-            - status
-          properties:
-            status:
-              type: string
-              enum:
-                - Picked Up
-    responses:
-      200:
-        description: Order status updated to picked up successfully
-    """
-    return update_order_status(order_id)
-
-@order_bp.route('/<order_id>/deliver', methods=['PUT'])
-@role_required('delivery agent')
-def deliver_order_route(order_id):
-    """
-    Update order status to delivered
-    ---
-    tags:
-      - Orders
-    parameters:
-      - in: path
-        name: order_id
-        type: string
-        required: true
-      - in: body
-        name: body
-        schema:
-          type: object
-          required:
-            - status
-          properties:
-            status:
-              type: string
-              enum:
-                - Delivered
-    responses:
-      200:
-        description: Order status updated to delivered successfully
-    """
-    return update_order_status(order_id)
+    data = request.get_json()
+    status = data.get('status')
+    return update_order_status(order_id, status)

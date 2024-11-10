@@ -1,3 +1,5 @@
+import uuid
+
 class Order:
     """
     A class to represent an order.
@@ -20,11 +22,12 @@ class Order:
             items (list): A list of items in the order.
             total_price (float): The total price of the order.
         """
+        self.id = str(uuid.uuid4())  # Ensure each order has a unique ID
         self.user_id = user_id
         self.restaurant_id = restaurant_id
         self.items = items
         self.total_price = total_price
-        self.status = 'Pending'
+        self.status = "Pending"
 
     def update_status(self, status):
         """
@@ -33,8 +36,7 @@ class Order:
         Args:
             status (str): The new status of the order.
         """
-        if status in ['Accepted', 'Rejected', 'Picked Up', 'Delivered']:
-            self.status = status
+        self.status = status
 
 # In-memory storage for simplicity
 orders = []
