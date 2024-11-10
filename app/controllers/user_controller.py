@@ -4,7 +4,6 @@ from app.models.user_model import User, users
 def register_user():
     """
     Register a new user.
-
     Returns:
         Response: JSON response with a success message.
     """
@@ -17,10 +16,8 @@ def register_user():
 def get_user(user_id):
     """
     Get user profile.
-
     Args:
         user_id (str): The ID of the user.
-
     Returns:
         Response: JSON response with user details or an error message.
     """
@@ -32,10 +29,8 @@ def get_user(user_id):
 def update_user(user_id):
     """
     Update user details.
-
     Args:
         user_id (str): The ID of the user.
-
     Returns:
         Response: JSON response with a success message or an error message.
     """

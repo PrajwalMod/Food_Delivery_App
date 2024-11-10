@@ -11,7 +11,6 @@ class User:
         delivery_address (str): The delivery address of the user.
         payment_info (str): The payment information of the user.
     """
-
     def __init__(self, username, email, password, role='user', phone=None, delivery_address=None, payment_info=None):
         """
         Constructs all the necessary attributes for the user object.
@@ -52,5 +51,5 @@ class User:
         if payment_info:
             self.payment_info = payment_info
 
-# In-memory storage for simplicity
+# Define a list to store user objects
 users = []

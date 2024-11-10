@@ -8,7 +8,6 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'your_secret_key'
     swagger = Swagger(app)
-
     app.register_blueprint(user_bp, url_prefix='/api/users')
     app.register_blueprint(order_bp, url_prefix='/api/orders')
     app.register_blueprint(restaurant_bp, url_prefix='/api/restaurants')

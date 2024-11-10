@@ -33,7 +33,7 @@ class Restaurant:
 
         Args:
             address (str): The new address of the restaurant.
-            cuisine (str): The new cuisine of the restaurant.
+            cuisine (str): The new cuisine type of the restaurant.
             menu (list): The new menu of the restaurant.
             work_hours (str): The new working hours of the restaurant.
         """

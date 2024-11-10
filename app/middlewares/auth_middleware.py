@@ -1,5 +1,6 @@
 from functools import wraps
 from flask import request, jsonify
+from app.auth import decode_jwt
 
 def token_required(f):
     """
@@ -16,6 +17,12 @@ def token_required(f):
         token = request.headers.get('Authorization')
         if not token:
             return jsonify({"message": "Token is missing!"}), 403
-        # Add token verification logic here
+        try:
+            token = token.split()[1]
+        except IndexError:
+            return jsonify({"message": "Token is invalid!"}), 403
+        decoded = decode_jwt(token)
+        if not decoded:
+            return jsonify({"message": "Token is invalid!"}), 403
         return f(*args, **kwargs)
     return decorated

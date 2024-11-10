@@ -43,5 +43,23 @@ class OrderControllerTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('testuser', str(response.data))
 
+    def test_update_order_status(self):
+        self.client.post('/api/users/register', data=json.dumps({
+            "username": "testuser",
+            "email": "testuser@example.com",
+            "password": "password"
+        }), content_type='application/json')
+        self.client.post('/api/orders/', data=json.dumps({
+            "user_id": "testuser",
+            "restaurant_id": "testrestaurant",
+            "items": ["item1", "item2"],
+            "total_price": 100.0
+        }), content_type='application/json')
+        response = self.client.put('/api/orders/testuser/status', data=json.dumps({
+            "status": "Accepted"
+        }), content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Order status updated successfully', str(response.data))
+
 if __name__ == '__main__':
     unittest.main()
