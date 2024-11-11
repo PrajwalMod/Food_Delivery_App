@@ -1,7 +1,7 @@
 import unittest
 from app import create_app
 from flask import json
-from app.utils.jwt_utils import generate_jwt  # Ensure you have a utility to generate JWT tokens
+from app.utils.jwt_utils import generate_jwt
 
 class RestaurantControllerTestCase(unittest.TestCase):
     def setUp(self):

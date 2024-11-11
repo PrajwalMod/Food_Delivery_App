@@ -47,16 +47,18 @@ The application is structured as a microservices-based architecture with the fol
 | - Role Middleware   |       | - Restaurant Data   |
 +---------------------+       +---------------------+
 ```
+### As you can see the application is structured into three main microservices:
+  1. **User Service:** Handles user-related operations such as registration, login, profile retrieval, and profile updates.
+  2. **Order Service:** Manages order-related operations such as creating orders, updating order statuses, and retrieving order details.
+  3. **Restaurant Service:** Handles restaurant-related operations such as adding restaurants, updating restaurant details, and searching for restaurants.
 
 ### API Architecture Style
-
-The API follows the RESTful (Representational State Transfer) architecture style. This includes:
-
-1. **Resource-Based URLs:** The API endpoints are structured around resources such as users, orders, and restaurants.
-2. **HTTP Methods:** The API uses standard HTTP methods to perform CRUD (Create, Read, Update, Delete) operations.
-3. **Statelessness:** Each API request contains all the information needed to process the request, typically through the use of tokens for authentication and authorization.
-4. **Use of JSON:** The API uses JSON as the format for request and response bodies.
-5. **Clear Separation of Concerns:** The application is structured with separate services for users, orders, and restaurants, each with its own set of endpoints and responsibilities.
+  The API follows the RESTful (Representational State Transfer) architecture style. This includes:
+  1. **Resource-Based URLs:** The API endpoints are structured around resources such as users, orders, and restaurants.
+  2. **HTTP Methods:** The API uses standard HTTP methods to perform CRUD (Create, Read, Update, Delete) operations.
+  3. **Statelessness:** Each API request contains all the information needed to process the request, typically through the use of tokens for authentication and authorization.
+  4. **Use of JSON:** The API uses JSON as the format for request and response bodies.
+  5. **Clear Separation of Concerns:** The application is structured with separate services for users, orders, and restaurants, each with its own set of endpoints and responsibilities.
 
 ## Roles and Permissions
   ### Roles
