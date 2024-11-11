@@ -46,16 +46,40 @@ The application is structured as a microservices-based architecture with the fol
 | - JWT Tokens        |       | - Order Data        |
 | - Role Middleware   |       | - Restaurant Data   |
 +---------------------+       +---------------------+
+```
+
+### API Architecture Style
+
+The API follows the RESTful (Representational State Transfer) architecture style. This includes:
+
+1. **Resource-Based URLs:** The API endpoints are structured around resources such as users, orders, and restaurants.
+2. **HTTP Methods:** The API uses standard HTTP methods to perform CRUD (Create, Read, Update, Delete) operations.
+3. **Statelessness:** Each API request contains all the information needed to process the request, typically through the use of tokens for authentication and authorization.
+4. **Use of JSON:** The API uses JSON as the format for request and response bodies.
+5. **Clear Separation of Concerns:** The application is structured with separate services for users, orders, and restaurants, each with its own set of endpoints and responsibilities.
 
 ## Roles and Permissions
-  Roles
-    1. User: Can register, login, view and update their profile, place orders, and view order statuses.
-    2. Restaurant Owner: Can add, update, and view restaurant details, and update order statuses to "Accepted" or "Rejected".
-    3. Delivery Agent: Can update order statuses to "Picked Up" and "Delivered".
-  Permissions
-    1. User: Access to user-related endpoints.
-    2. Restaurant Owner: Access to restaurant-related endpoints and order status updates.
-    3. Delivery Agent: Access to order status updates for delivery.
+  ### Roles
+  1. **User:** Can register, login, view and update their profile, place orders, and view order statuses.
+  2. **Restaurant Owner:** Can add, update, and view restaurant details, and update order statuses to "Accepted" or "Rejected".
+  3. **Delivery Agent:** Can update order statuses to "Picked Up" and "Delivered".
+  ### Permissions
+  1. **User:** Access to user-related endpoints.
+  2. **Restaurant Owner:** Access to restaurant-related endpoints and order status updates.
+  3. **Delivery Agent:** Access to order status updates for delivery.
+
+## Order Statuses
+  The following order statuses are used to track the progress of an order:
+  1. **Pending:** The default status when an order is created.
+  2. **Accepted:** The order has been accepted by the restaurant.
+  3. **Rejected:** The order has been rejected by the restaurant.
+  4. **Picked Up:** The order has been picked up by the delivery agent.
+  5. **Delivered:** The order has been delivered to the customer.
+
+### Data Validation
+  The application includes basic data validation for email and password fields:
+  1. The ``validate_email`` function ensures that the email format is valid using a regular expression.
+  2. The ``validate_password`` function ensures that the password is strong by checking its length and the presence of digits.
 
 ## Endpoints
 
@@ -308,21 +332,9 @@ The application is structured as a microservices-based architecture with the fol
     ]
     ```
 
-## Roles and Permissions
+# Running Tests
 
-### Roles
-- **User**: Can register, login, view and update their profile, place orders, and view order statuses.
-- **Restaurant Owner**: Can add, update, and view restaurant details, and update order statuses to "Accepted" or "Rejected".
-- **Delivery Agent**: Can update order statuses to "Picked Up" and "Delivered".
-
-### Permissions
-- **User**: Access to user-related endpoints.
-- **Restaurant Owner**: Access to restaurant-related endpoints and order status updates.
-- **Delivery Agent**: Access to order status updates for delivery.
-
-## Running Tests
-
-To ensure everything is working correctly, run your automated tests using `unittest` or `pytest`:
+To ensure everything is working correctly, run your automated tests using `unittest`:
 
 #### Using `unittest`
 ```sh
