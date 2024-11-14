@@ -8,12 +8,15 @@ from app.routes.restaurant_routes import restaurant_bp
 from flask_migrate import Migrate
 from app.database import db
 import os
+from flask_cors import CORS
 
 migrate = Migrate()
 
 
 def create_app():
     app = Flask(__name__)
+
+    CORS(app)
 
     app.config['SECRET_KEY'] = os.urandom(24)
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/food_delivery_db' # for local
