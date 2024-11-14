@@ -10,6 +10,11 @@ def add_restaurant(data):
     Returns:
         Restaurant: The created restaurant object.
     """
+    # Ensure required fields are provided in the data
+    required_fields = ['name', 'address', 'cuisine', 'menu', 'work_hours']
+    if not all(field in data for field in required_fields):
+        raise ValueError("Missing required fields: name, address, cuisine, menu, work_hours")
+
     restaurant = Restaurant(**data)
     restaurants.append(restaurant)
     return restaurant
@@ -24,4 +29,7 @@ def get_restaurant_by_id(restaurant_id):
     Returns:
         Restaurant: The restaurant object if found, else None.
     """
-    return next((r for r in restaurants if r.name == restaurant_id), None)
+    restaurant = next((r for r in restaurants if r.name == restaurant_id), None)
+    if not restaurant:
+        raise ValueError(f"Restaurant with name {restaurant_id} not found")
+    return restaurant

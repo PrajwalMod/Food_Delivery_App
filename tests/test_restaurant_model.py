@@ -6,6 +6,10 @@ class RestaurantModelTestCase(unittest.TestCase):
         # Clear the restaurants list before each test
         restaurants.clear()
 
+    def tearDown(self):
+        # Clear restaurants after each test to ensure isolation
+        restaurants.clear()
+
     def test_restaurant_creation(self):
         restaurant = Restaurant(
             name="Test Restaurant",
@@ -59,6 +63,21 @@ class RestaurantModelTestCase(unittest.TestCase):
         self.assertIn(restaurant1, restaurants)
         self.assertIn(restaurant2, restaurants)
         self.assertEqual(len(restaurants), 2)
+
+    def test_update_restaurant_with_edge_case_menu(self):
+        restaurant = Restaurant(
+            name="Edge Case Restaurant",
+            address="456 Edge St",
+            cuisine="Specialty Cuisine",
+            menu=[{"name": "item1", "price": 10.0}],
+            work_hours="8 AM - 8 PM"
+        )
+        restaurant.update_details(
+            menu=[],  # Testing empty menu case
+            work_hours="Closed"  # Unusual working hours
+        )
+        self.assertEqual(restaurant.menu, [])
+        self.assertEqual(restaurant.work_hours, "Closed")
 
 if __name__ == '__main__':
     unittest.main()

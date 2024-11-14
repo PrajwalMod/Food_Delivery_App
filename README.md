@@ -6,12 +6,23 @@ This is a microservice-based food delivery app built with Flask.
 
 1. Clone the repository.
 2. Create a virtual environment and activate it.
-3. Install the dependencies:
+3. For windows
+
+```commandline
+    python3 -m venv venv
+    .\venv\Scripts\activate.bat
+```
+4. For Linux
+```commandline
+    python3 -m venv venv
+    source venv/bin/activate
+```
+5. Install the dependencies:
     ```sh
     pip install -r requirements.txt
     ```
-4. Create a `.env` file and add your environment variables.
-5. Run the application:
+6. Create a `.env` file and add your environment variables.
+7. Run the application:
     ```sh
     python -m app.app
     ```

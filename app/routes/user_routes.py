@@ -30,6 +30,7 @@ def register_user_route():
               type: string
             role:
               type: string
+              default: "user"
     responses:
       201:
         description: User registered successfully
@@ -38,7 +39,7 @@ def register_user_route():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    role = data.get('role', 'user')
+    role = data.get('role', 'user')  # Default role as 'user' if not provided
     return register_user(username, email, password, role)
 
 @user_bp.route('/login', methods=['POST'])
@@ -64,6 +65,8 @@ def login():
     responses:
       200:
         description: User logged in successfully
+      401:
+        description: Invalid credentials
     """
     data = request.get_json()
     username = data.get('username')
@@ -88,6 +91,8 @@ def get_user_route(user_id):
     responses:
       200:
         description: User profile retrieved successfully
+      404:
+        description: User not found
     """
     return get_user(user_id)
 
@@ -119,5 +124,7 @@ def update_user_route(user_id):
     responses:
       200:
         description: User details updated successfully
+      404:
+        description: User not found
     """
     return update_user(user_id)

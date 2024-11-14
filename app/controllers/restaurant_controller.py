@@ -1,6 +1,7 @@
 from flask import request, jsonify
-from app.models.restaurant_model import Restaurant, restaurants
-from app.models.order_model import Order, orders
+from app.models.restaurant_model import Restaurant
+from app.models.order_model import Order
+from app.database import db
 
 def add_restaurant():
     """
@@ -10,9 +11,20 @@ def add_restaurant():
         Response: JSON response with a success message.
     """
     data = request.get_json()
-    restaurant = Restaurant(**data)
-    restaurants.append(restaurant)
-    return jsonify({"message": "Restaurant added successfully"}), 201
+    try:
+        restaurant = Restaurant(
+            name=data['name'],
+            address=data['address'],
+            cuisine=data['cuisine'],
+            menu=data['menu'],
+            work_hours=data['work_hours']
+        )
+        db.session.add(restaurant)
+        db.session.commit()
+        return jsonify({"message": "Restaurant added successfully"}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"Failed to add restaurant: {str(e)}"}), 400
 
 def get_restaurant(restaurant_id):
     """
@@ -24,9 +36,16 @@ def get_restaurant(restaurant_id):
     Returns:
         Response: JSON response with restaurant details or an error message.
     """
-    restaurant = next((r for r in restaurants if r.name == restaurant_id), None)
+    restaurant = Restaurant.query.get(restaurant_id)
     if restaurant:
-        return jsonify(restaurant.__dict__), 200
+        return jsonify({
+            "id": restaurant.id,
+            "name": restaurant.name,
+            "address": restaurant.address,
+            "cuisine": restaurant.cuisine,
+            "menu": restaurant.menu,
+            "work_hours": restaurant.work_hours
+        }), 200
     return jsonify({"message": "Restaurant not found"}), 404
 
 def update_restaurant(restaurant_id):
@@ -40,10 +59,20 @@ def update_restaurant(restaurant_id):
         Response: JSON response with a success message or an error message.
     """
     data = request.get_json()
-    restaurant = next((r for r in restaurants if r.name == restaurant_id), None)
+    restaurant = Restaurant.query.get(restaurant_id)
     if restaurant:
-        restaurant.update_details(**data)
-        return jsonify({"message": "Restaurant details updated successfully"}), 200
+        try:
+            restaurant.update_details(
+                address=data.get('address'),
+                cuisine=data.get('cuisine'),
+                menu=data.get('menu'),
+                work_hours=data.get('work_hours')
+            )
+            db.session.commit()
+            return jsonify({"message": "Restaurant details updated successfully"}), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"message": f"Failed to update restaurant: {str(e)}"}), 400
     return jsonify({"message": "Restaurant not found"}), 404
 
 def update_order_status(order_id):
@@ -58,9 +87,10 @@ def update_order_status(order_id):
     """
     data = request.get_json()
     status = data.get('status')
-    order = next((o for o in orders if o.user_id == order_id), None)
+    order = Order.query.get(order_id)
     if order and status in ['Accepted', 'Rejected']:
         order.update_status(status)
+        db.session.commit()
         return jsonify({"message": f"Order {status.lower()} successfully"}), 200
     return jsonify({"message": "Order not found or invalid status"}), 404
 
@@ -73,12 +103,25 @@ def search_restaurants():
     """
     cuisine = request.args.get('cuisine')
     max_price = request.args.get('max_price', type=float)
-    results = restaurants
+    query = Restaurant.query
 
     if cuisine:
-        results = [r for r in results if r.cuisine.lower() == cuisine.lower()]
+        query = query.filter(Restaurant.cuisine.ilike(f"%{cuisine}%"))
 
+    restaurants = query.all()
     if max_price is not None:
-        results = [r for r in results if any(item['price'] <= max_price for item in r.menu)]
+        restaurants = [
+            restaurant for restaurant in restaurants
+            if any(item['price'] <= max_price for item in restaurant.menu)
+        ]
 
-    return jsonify([r.__dict__ for r in results]), 200
+    return jsonify([
+        {
+            "id": restaurant.id,
+            "name": restaurant.name,
+            "address": restaurant.address,
+            "cuisine": restaurant.cuisine,
+            "menu": restaurant.menu,
+            "work_hours": restaurant.work_hours
+        } for restaurant in restaurants
+    ]), 200
