@@ -17,7 +17,7 @@ def create_app():
 
     app.config['SECRET_KEY'] = os.urandom(24)
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/food_delivery_db' # for local
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres.dgarozurghfuinneftvr:SpKlEVebfNHzZdrr@aws-0-ap-south-1.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x' # for vercel supabase postgres
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres.dgarozurghfuinneftvr:SpKlEVebfNHzZdrr@aws-0-ap-south-1.pooler.supabase.com:6543/postgres' # for vercel supabase postgres
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     app.register_blueprint(user_bp, url_prefix='/api/users')
