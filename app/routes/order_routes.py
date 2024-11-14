@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from app.controllers.order_controller import create_order, get_order, update_order_status, get_user_order_status
 from app.middlewares.role_middleware import role_required
 
@@ -36,7 +36,9 @@ def create_order_route():
       201:
         description: Order created successfully
     """
-    return create_order()
+    data = request.get_json()
+    print(data)
+    return create_order(data)
 
 @order_bp.route('/<order_id>', methods=['GET'])
 def get_order_route(order_id):

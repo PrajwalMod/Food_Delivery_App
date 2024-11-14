@@ -8,8 +8,14 @@ def create_order(data):
         data (dict): A dictionary containing order details.
 
     Returns:
-        Order: The created order object.
+        Order: The created order object or raises an exception if invalid data is provided.
     """
+    # Ensure required fields are provided in the data
+    required_fields = ['user_id', 'restaurant_id', 'items', 'total_price']
+    print(data)
+    if not all(field in data for field in required_fields):
+        raise ValueError("Missing required fields: user_id, restaurant_id, items, total_price")
+
     order = Order(**data)
     orders.append(order)
     return order
@@ -24,4 +30,7 @@ def get_order_by_id(order_id):
     Returns:
         Order: The order object if found, else None.
     """
-    return next((o for o in orders if o.id == order_id), None)
+    order = next((o for o in orders if o.id == order_id), None)
+    if not order:
+        raise ValueError(f"Order with ID {order_id} not found")
+    return order
