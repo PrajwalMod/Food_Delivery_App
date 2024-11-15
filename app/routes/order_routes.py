@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.controllers.order_controller import create_order, get_order, update_order_status, get_user_order_status
+from app.controllers.order_controller import *
 from app.middlewares.role_middleware import role_required
 
 order_bp = Blueprint('order_bp', __name__)
@@ -37,7 +37,6 @@ def create_order_route():
         description: Order created successfully
     """
     data = request.get_json()
-    print(data)
     return create_order(data)
 
 @order_bp.route('/<order_id>', methods=['GET'])
@@ -77,7 +76,7 @@ def get_user_order_status_route(user_id):
     return get_user_order_status(user_id)
 
 @order_bp.route('/<order_id>/status', methods=['PUT'])
-@role_required('restaurant owner')
+# @role_required('restaurant owner')
 def update_order_status_route(order_id):
     """
     Update order status
@@ -108,3 +107,8 @@ def update_order_status_route(order_id):
     data = request.get_json()
     status = data.get('status')
     return update_order_status(order_id, status)
+
+
+@order_bp.route('/all', methods=['GET'])
+def all_orders():
+    return list_all_orders()

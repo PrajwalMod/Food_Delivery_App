@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.controllers.user_controller import register_user, get_user, update_user
+from app.controllers.user_controller import *
 from app.services.user_service import authenticate_user
 from app.auth import decode_jwt
 
@@ -36,11 +36,7 @@ def register_user_route():
         description: User registered successfully
     """
     data = request.get_json()
-    username = data.get('username')
-    email = data.get('email')
-    password = data.get('password')
-    role = data.get('role', 'user')  # Default role as 'user' if not provided
-    return register_user(username, email, password, role)
+    return register_user(data)
 
 @user_bp.route('/login', methods=['POST'])
 def login():
@@ -128,3 +124,8 @@ def update_user_route(user_id):
         description: User not found
     """
     return update_user(user_id)
+
+
+@user_bp.route('/all', methods=['GET'])
+def all_users():
+    return list_all_users()

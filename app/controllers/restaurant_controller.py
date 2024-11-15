@@ -3,14 +3,13 @@ from app.models.restaurant_model import Restaurant
 from app.models.order_model import Order
 from app.database import db
 
-def add_restaurant():
+def add_restaurant(data):
     """
     Add a new restaurant.
 
     Returns:
         Response: JSON response with a success message.
     """
-    data = request.get_json()
     try:
         restaurant = Restaurant(
             name=data['name'],
@@ -21,7 +20,7 @@ def add_restaurant():
         )
         db.session.add(restaurant)
         db.session.commit()
-        return jsonify({"message": "Restaurant added successfully"}), 201
+        return jsonify({"message": "Restaurant added successfully", "restaurant_id": restaurant.id}), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Failed to add restaurant: {str(e)}"}), 400
@@ -125,3 +124,15 @@ def search_restaurants():
             "work_hours": restaurant.work_hours
         } for restaurant in restaurants
     ]), 200
+
+def list_all_restaurants():
+    restaurants = Restaurant.query.all()  # Retrieve all restaurants
+    restaurant_list = [{
+        "id": restaurant.id,
+        "name": restaurant.name,
+        "address": restaurant.address,
+        "cuisine": restaurant.cuisine,
+        "menu": restaurant.menu,
+        "work_hours": restaurant.work_hours
+    } for restaurant in restaurants]
+    return jsonify(restaurant_list), 200

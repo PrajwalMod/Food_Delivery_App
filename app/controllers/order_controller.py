@@ -86,3 +86,15 @@ def update_order_status(order_id, status):
         db.session.commit()
         return jsonify({"message": f"Order {status.lower()} successfully"}), 200
     return jsonify({"message": "Order not found or invalid status"}), 404
+
+def list_all_orders():
+    orders = Order.query.all()  # Retrieve all orders
+    order_list = [{
+        "id": order.id,
+        "user_id": order.user_id,
+        "restaurant_id": order.restaurant_id,
+        "items": order.items,
+        "total_price": order.total_price,
+        "status": order.status
+    } for order in orders]
+    return jsonify(order_list), 200

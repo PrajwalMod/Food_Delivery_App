@@ -3,14 +3,13 @@ from app.models.user_model import User
 from app.database import db
 
 
-def register_user():
+def register_user(data):
     """
     Register a new user.
 
     Returns:
         Response: JSON response with a success message or error.
     """
-    data = request.get_json()
     try:
         user = User(
             username=data['username'],
@@ -20,7 +19,7 @@ def register_user():
         )
         db.session.add(user)
         db.session.commit()
-        return jsonify({"message": "User registered successfully"}), 201
+        return jsonify({"message": "User registered successfully", "user_id": user.id}), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": f"Error registering user: {str(e)}"}), 400
@@ -76,3 +75,14 @@ def update_user(user_id):
             db.session.rollback()
             return jsonify({"message": f"Error updating user: {str(e)}"}), 400
     return jsonify({"message": "User not found"}), 404
+
+
+def list_all_users():
+    users = User.query.all()  # Retrieve all users
+    user_list = [{
+        "id": user.id,
+        "username": user.username,
+        "email": user.email,
+        "role": user.role
+    } for user in users]
+    return jsonify(user_list), 200
