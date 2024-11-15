@@ -6,11 +6,15 @@ class UserModelTestCase(unittest.TestCase):
         # Clear the users list before each test
         users.clear()
 
+    def tearDown(self):
+        # Ensure users list is cleared after each test to maintain data isolation
+        users.clear()
+
     def test_user_creation(self):
         user = User(
             username="testuser",
             email="testuser@example.com",
-            password="password",
+            password="password",  # Assuming plain text for testing, ideally hashed
             role="user",
             phone="1234567890",
             delivery_address="123 Test St",
@@ -18,7 +22,7 @@ class UserModelTestCase(unittest.TestCase):
         )
         self.assertEqual(user.username, "testuser")
         self.assertEqual(user.email, "testuser@example.com")
-        self.assertEqual(user.password, "password")
+        self.assertEqual(user.password, "password")  # Replace with a hash check if hashed
         self.assertEqual(user.role, "user")
         self.assertEqual(user.phone, "1234567890")
         self.assertEqual(user.delivery_address, "123 Test St")
@@ -69,6 +73,22 @@ class UserModelTestCase(unittest.TestCase):
         self.assertIn(user1, users)
         self.assertIn(user2, users)
         self.assertEqual(len(users), 2)
+
+    def test_user_creation_without_optional_fields(self):
+        user = User(
+            username="testuser",
+            email="testuser@example.com",
+            password="password",
+            role="user"
+            # No phone, delivery_address, or payment_info
+        )
+        self.assertEqual(user.username, "testuser")
+        self.assertEqual(user.email, "testuser@example.com")
+        self.assertEqual(user.password, "password")
+        self.assertEqual(user.role, "user")
+        self.assertIsNone(user.phone)
+        self.assertIsNone(user.delivery_address)
+        self.assertIsNone(user.payment_info)
 
 if __name__ == '__main__':
     unittest.main()

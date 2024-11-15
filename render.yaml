@@ -1,0 +1,19 @@
+# render.yaml
+
+services:
+  - type: web
+    name: food-delivery-app
+    env: python
+    plan: free
+    runtime: python  # Add this line to specify the runtime
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app.app:app"  # Path to your WSGI entry point
+
+    # Environment variables for Flask
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DATABASE_URL
+        value: "postgresql://postgres.dgarozurghfuinneftvr:SpKlEVebfNHzZdrr@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"  # Replace with your actual Supabase database URL
+      - key: SECRET_KEY
+        generateValue: true

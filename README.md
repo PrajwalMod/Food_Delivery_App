@@ -2,16 +2,27 @@
 
 This is a microservice-based food delivery app built with Flask.
 
-## Setup
+## Setup 
 
 1. Clone the repository.
 2. Create a virtual environment and activate it.
-3. Install the dependencies:
+3. For windows
+
+```commandline
+    python3 -m venv venv
+    .\venv\Scripts\activate.bat
+```
+4. For Linux
+```commandline
+    python3 -m venv venv
+    source venv/bin/activate
+```
+5. Install the dependencies:
     ```sh
     pip install -r requirements.txt
     ```
-4. Create a `.env` file and add your environment variables.
-5. Run the application:
+6. Create a `.env` file and add your environment variables.
+7. Run the application:
     ```sh
     python -m app.app
     ```
@@ -341,3 +352,99 @@ To ensure everything is working correctly, run your automated tests using `unitt
 #### Using `unittest`
 ```sh
 python -m unittest <test>
+```
+
+## Test Coverage
+
+The following is a screenshot of the coverage report:
+
+![Coverage Report](images/coverage_report.png)
+
+# Deployed API - Food Delivery App
+
+This is the backend API for the Food Delivery App, deployed on Render with Supabase as the PostgreSQL database. This API allows you to manage users, restaurants, and orders for a food delivery service.
+
+## Deployment Setup
+
+### Render Deployment
+
+To deploy the app on [Render](https://render.com/), follow these steps:
+
+1. **Create a Render Account**: Sign up or log in to [Render](https://render.com/).
+2. **Create a New Web Service**: 
+   - Go to **Dashboard** and click on **New > Web Service**.
+   - Connect your GitHub repository containing the Food Delivery App.
+3. **Add a `render.yaml` File**: 
+   - In the root directory of your repository, add a `render.yaml` file to specify the deployment settings.
+   - Here’s a sample `render.yaml` file:
+
+     ```yaml
+     services:
+       - type: web
+         name: food-delivery-app
+         env: python
+         region: oregon
+         buildCommand: "pip install -r requirements.txt"
+         startCommand: "flask run --host=0.0.0.0 --port=10000"
+         envVars:
+           - key: DATABASE_URL
+             value: "YOUR_SUPABASE_POSTGRES_URL"
+     ```
+
+   - Replace `"YOUR_SUPABASE_POSTGRES_URL"` with the actual Supabase PostgreSQL connection URL.
+4. **Deploy the Service**: Render will automatically build and deploy the app based on the settings in `render.yaml`.
+
+### Supabase Setup for PostgreSQL
+
+To use Supabase as the PostgreSQL database backend:
+
+1. **Create a Supabase Account**: Sign up or log in to [Supabase](https://supabase.io/).
+2. **Create a New Project**:
+   - Once logged in, click on **New Project**.
+   - Choose a name, region, and database password, then click **Create new project**.
+3. **Get the Database URL**:
+   - Go to **Settings > Database** in your project and copy the `DATABASE_URL`.
+   - Paste this URL into your `render.yaml` file under `DATABASE_URL` as shown above.
+4. **Set Up Tables**:
+   - Use the SQL Editor in Supabase to create tables (like `users`, `orders`, and `restaurants`) based on your app's data model.
+
+---
+
+## Base URL
+
+After deploying, all API requests are made to the following base URL:
+
+https://food-delivery-app-oyfl.onrender.com/
+
+## Testing with Postman
+
+To test these APIs using Postman:
+
+1. **Set Up Authorization**: Use the `/api/users/login` endpoint to get a token. Copy the token and set it as a Bearer token in Postman:
+- Go to the **Authorization** tab.
+- Choose **Bearer Token** as the type.
+- Paste your token in the field provided.
+
+2. **Create and Test Requests**:
+- Create new requests for each endpoint.
+- Set the request method (e.g., GET, POST) as required.
+- For POST requests, go to the **Body** tab, select **raw** and choose **JSON** as the format, and then add the payload.
+- Send the request and observe the response.
+
+3. **Use the Base URL**:
+- All requests should start with the base URL `https://food-delivery-app-oyfl.onrender.com/`.
+
+4. **Check Authorization Requirements**:
+- Ensure you add the token in the **Authorization** header for endpoints that require it.
+
+## Database
+
+The app uses [Supabase](https://supabase.io/) as a PostgreSQL database backend.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+
+
