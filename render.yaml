@@ -5,7 +5,7 @@ services:
     name: food-delivery-app
     env: python
     plan: free
-    runtime: python3  # Add this line to specify the runtime
+    runtime: python  # Add this line to specify the runtime
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn app.app:app"  # Path to your WSGI entry point
 
