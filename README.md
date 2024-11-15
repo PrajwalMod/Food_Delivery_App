@@ -2,21 +2,30 @@
 
 This is a microservice-based food delivery app built with Flask.
 
+---
+# Contributers
+This project was made by:
+  1. **Prajwal Modak (2023mt93295)**- Created the endpoints and worked on documentation and basic unit tests. Implemented Swagger. <br>**Git repo:** https://github.com/PrajwalMod/Food_Delivery_App<br>
+
+  2. **Prithviraj Dey (2023mt93070)**- Worked on the Database and Deployment and Testing. Completed test coverage and generated reports.
+  <br>**Git Repo:** https://github.com/dey27/Food_Delivery_App<br>
+  
+  The overall directions of the project was a collective effort. We worked together on the concept, architecure and implementation based on our discussions.
+
 ## Setup 
 
 1. Clone the repository.
 2. Create a virtual environment and activate it.
 3. For windows
-
-```commandline
+    ```commandline
     python3 -m venv venv
     .\venv\Scripts\activate.bat
-```
+    ```
 4. For Linux
-```commandline
+  ```commandline
     python3 -m venv venv
     source venv/bin/activate
-```
+  ```
 5. Install the dependencies:
     ```sh
     pip install -r requirements.txt
@@ -431,6 +440,13 @@ To use Supabase as the PostgreSQL database backend:
 After deploying, all API requests are made to the following base URL:
 
 https://food-delivery-app-oyfl.onrender.com/
+
+## Swagger URL 
+
+All the endpoints can be found here: https://food-delivery-app-oyfl.onrender.com/apidocs/
+
+## DISCLAIMER: Caveats with Render:
+Please be aware that we are using a free version of render and there are certain limitations with that. Chief among them being the fact that after a period of inactivity, the page goes to hibernate and will take time to wake up. After that it will work normally.
 
 ## Testing with Postman
 
