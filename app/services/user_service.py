@@ -3,6 +3,14 @@ from flask import current_app
 from app.utils.jwt_utils import generate_jwt
 from werkzeug.security import check_password_hash, generate_password_hash
 
+import jwt
+import datetime
+
+# Secret key for signing the token
+secret_key = "i6nneftv@r"
+
+# Header and payload for the token
+header = {"alg": "HS256", "typ": "JWT"}
 
 def create_user(data):
     """
@@ -81,15 +89,25 @@ def authenticate_user(username, password):
     Returns:
         str: A JWT token if authentication is successful, else None.
     """
-    db = get_db()
-    users_collection = db['users']
+    # db = get_db()
+    # users_collection = db['users']
 
-    # Find the user by username
-    user = users_collection.find_one({"username": username})
+    payload = {
+        "username": username,
+        "password": password,
+        "iat": datetime.datetime.now(),
+        "exp": datetime.datetime.now() + datetime.timedelta(hours=1)
+    }
 
-    if user and check_password_hash(user['password'], password):
-        # Generate JWT token if user is authenticated
-        token = generate_jwt(user['username'], user['role'])
-        return token
+    # Encode the token
+    token = jwt.encode(payload, secret_key, algorithm="HS256", headers=header)
 
-    return None
+    # # Find the user by username
+    # user = users_collection.find_one({"username": username})
+    #
+    # if user and check_password_hash(user['password'], password):
+    #     # Generate JWT token if user is authenticated
+    #     token = generate_jwt(user['username'], user['role'])
+    #     return token
+
+    return token
