@@ -8,9 +8,13 @@ This project was made by:
   1. **Prajwal Modak (2023mt93295)**- Created the endpoints and worked on documentation and basic unit tests. Implemented Swagger. <br>**Git repo:** https://github.com/PrajwalMod/Food_Delivery_App<br>
 
   2. **Prithviraj Dey (2023mt93070)**- Worked on the Database and Deployment and Testing. Completed test coverage and generated reports.
-  <br>**Git Repo:** https://github.com/dey27/Food_Delivery_App<br>
+  <>**Git Repo:** https://github.com/dey27/Food_Delivery_App
   
   The overall directions of the project was a collective effort. We worked together on the concept, architecure and implementation based on our discussions.
+
+  ### Video link
+  Couldn't upload this or even compress the video enough to upload in Taxila. So it added here as a last resort.
+  <br>https://drive.google.com/file/d/1gbHq9SfvebVrn8AaTEYUwsEBhyKtSFT7/view?usp=drive_link<br>
 
 ## Setup 
 
