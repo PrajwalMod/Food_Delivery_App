@@ -27,37 +27,54 @@ This is a microservice-based food delivery app built with Flask.
     python -m app.app
     ```
 
+<div style="page-break-after: always;"></div>
+
 ## Architecture
 
 The application is structured as a microservices-based architecture with the following components:
+<img src="Architecture_diagram.png">
 
-```plaintext
-+---------------------+       +--------------------------------------+          +---------------------------+
-|     User Service    |       |    Order Service                     |          |  Restaurant Service       |
-|---------------------|       |--------------------------------------|          |---------------------------|
-| - Register User     |       | - Create Order                       |          | - Add Restaurant          |
-|   POST /register    |       |   POST /orders/                      |          |   POST /restaurants/      |
-| - Login User        |       | - Update Order                       |          | - Update Restaurant       |
-|   POST /login       |       |   PUT /orders/{id}                   |          |   PUT /restaurants/{id}   |
-| - Get User Profile  |       | - Get Order                          |          | - Get Restaurant          |
-|   GET /{user_id}    |       |   GET /orders/{id}                   |          |   GET /restaurants/{id}   |
-| - Update User       |       | - Order Status                       |          | - Search Restaurants      |
-|   PUT /{user_id}    |       |   GET /orders/user/{user_id}/status  |          |   GET /restaurants/search |
-+---------------------+       | - Pickup Order                       |          +---------------------------+
-         |                    |   PUT /orders/{id}/pickup            |
-         |                    | - Deliver Order                      |
-         |                    |   PUT /orders/{id}/deliver           |
-         |                    +--------------------------------------+
-         |                           |
-         v                           v
-+---------------------+       +---------------------+
-| Authentication &    |       |     Database        |
-| Authorization       |       |---------------------|
-|---------------------|       | - User Data         |
-| - JWT Tokens        |       | - Order Data        |
-| - Role Middleware   |       | - Restaurant Data   |
-+---------------------+       +---------------------+
-```
+<div style="page-break-after: always;"></div>
+## Database Structure
+    ### Users Table
+
+    +---------------------+     
+    |       users         |
+    +---------------------+
+    | id (String, PK)     |
+    | username (String)   |
+    | email (String)      |
+    | password (String)   |
+    | role (String)       |
+    | phone (String)      |
+    | delivery_address    |
+    | payment_info        |
+    +---------------------+
+
+  ### Orders Tables
+    +---------------------+
+    |       orders        |
+    +---------------------+
+    | id (String, PK)     |
+    | user_id (String)    |
+    | restaurant_id       |
+    | items (PickleType)  |
+    | total_price (Float) |
+    | status (String)     |
+    +---------------------+
+  ### Restaurant Tables
+  
+    +---------------------+
+    |    restaurants      |
+    +---------------------+
+    | id (String, PK)     |
+    | name (String)       |
+    | address (String)    |
+    | cuisine (String)    |
+    | menu (PickleType)   |
+    | work_hours (String) |
+    +---------------------+
+
 ### As you can see the application is structured into three main microservices:
   1. **User Service:** Handles user-related operations such as registration, login, profile retrieval, and profile updates.
   2. **Order Service:** Manages order-related operations such as creating orders, updating order statuses, and retrieving order details.
@@ -80,8 +97,7 @@ The application is structured as a microservices-based architecture with the fol
   1. **User:** Access to user-related endpoints.
   2. **Restaurant Owner:** Access to restaurant-related endpoints and order status updates.
   3. **Delivery Agent:** Access to order status updates for delivery.
-
-## Order Statuses
+  ### Order Statuses
   The following order statuses are used to track the progress of an order:
   1. **Pending:** The default status when an order is created.
   2. **Accepted:** The order has been accepted by the restaurant.
